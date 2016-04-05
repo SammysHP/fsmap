@@ -48,6 +48,9 @@
 
         <link rel="stylesheet" href="css/leaflet.contextmenu.css">
         <script src="js/leaflet.contextmenu.js"></script>
+
+        <link rel="stylesheet" href="css/leaflet.fullscreen.css">
+        <script src="js/leaflet.fullscreen.min.js"></script>
     </head>
     <body>
         <div id="map"></div>
@@ -210,7 +213,8 @@
                             alert([(0|e.latlng.lat*1000000)/1000000, ' ', (0|e.latlng.lng*1000000)/1000000, "\n\n", convertDDtoDM(e.latlng.lat, e.latlng.lng)].join(''));
                         }
                     }
-                ]
+                ],
+                fullscreenControl: true
             });
 
             var baseMaps = {
