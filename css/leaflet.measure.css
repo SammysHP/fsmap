@@ -1,0 +1,28 @@
+.leaflet-control-measure {
+	font-size: 20px;
+	font-weight: bold;
+	line-height: 21px;
+	}
+
+.leaflet-control-measure-on .leaflet-control-measure {
+	color: #2074B6;
+	}
+
+.leaflet-measure-tooltip {
+	font: 9px/1.25 "Helvetica Neue", Arial, Helvetica, sans-serif;
+	background-color: rgba(255, 255, 255, 0.7);
+	box-shadow: 0 0 5px #BBB;
+	margin: 0;
+	padding: 2px;
+	width: auto !important;
+	height: auto !important;
+	white-space: nowrap;
+	}
+
+.leaflet-measure-tooltip-total {
+	font-weight: bold;
+	}
+
+.leaflet-measure-tooltip-difference {
+	color: #777;
+	}

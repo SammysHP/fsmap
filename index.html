@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Fullscreen Map</title>
+
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+            }
+
+            html, body {
+                width: 100%;
+                height: 100%;
+            }
+
+            #map {
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+
+        <script src="js/jquery.min.js"></script>
+
+        <link rel="stylesheet" href="css/leaflet.css">
+        <script src="js/leaflet.js"></script>
+
+        <script src="js/leaflet.restoreview.js"></script>
+
+        <script src="js/leaflet.hash.js"></script>
+
+        <link rel="stylesheet" href="css/leaflet.history.css">
+        <script src="js/leaflet.history.js"></script>
+
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/leaflet.locate.min.css">
+        <!--[if lt IE 9]>
+            <link rel="stylesheet" href="css/leaflet.locate.ie.min.css">
+        <![endif]-->
+        <script src="js/leaflet.locate.min.js"></script>
+
+        <link rel="stylesheet" href="css/leaflet.geocoder.css">
+        <script src="js/leaflet.geocoder.js"></script>
+
+        <link rel="stylesheet" href="css/leaflet.measure.css">
+        <script src="js/leaflet.measure.js"></script>
+
+        <link rel="stylesheet" href="css/leaflet.editinosm.css">
+        <script src="js/leaflet.editinosm.js"></script>
+
+        <link rel="stylesheet" href="css/leaflet.contextmenu.css">
+        <script src="js/leaflet.contextmenu.js"></script>
+    </head>
+    <body>
+        <div id="map"></div>
+
+        <script>
+            L.QuadKeyTileLayer = L.TileLayer.extend({
+                getTileUrl: function (tilePoint) {
+                    this._adjustTilePoint(tilePoint);
+                    return L.Util.template(this._url, {
+                        s: this._getSubdomain(tilePoint),
+                        q: this._quadKey(tilePoint.x, tilePoint.y, this._getZoomForUrl())
+                    });
+                },
+                _quadKey: function (x, y, z) {
+                    var quadKey = [];
+                    for (var i = z; i > 0; i--) {
+                        var digit = '0';
+                        var mask = 1 << (i - 1);
+                        if ((x & mask) != 0) {
+                            digit++;
+                        }
+                        if ((y & mask) != 0) {
+                            digit++;
+                            digit++;
+                        }
+                        quadKey.push(digit);
+                    }
+                    return quadKey.join('');
+                }
+            });
+
+            function convertDDtoDM(lat, lon) {
+                function helper(x, lon) {
+                    return [
+                        x<0?lon?'W':'S':lon?'E':'N',
+                        ' ',
+                        0|Math.abs(x),
+                        '° ',
+                        (0|Math.abs(x)%1*60000)/1000
+                    ].join('');
+                }
+
+                return helper(lat, false) + ' ' + helper(lon, true);
+            }
+
+            var osmMapnik = new L.TileLayer(
+                'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                {
+                    minZoom: 3,
+                    maxZoom: 20,
+                    maxNativeZoom: 18,
+                    attribution: 'Map data © OpenStreetMap contributors'
+                }
+            );
+
+            // Just a quick way to add an OSM overlay. Idea for the future: All layers as overlays with independent opacity sliders.
+            var osmMapnikOverlay = new L.TileLayer(
+                'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                {
+                    minZoom: 3,
+                    maxZoom: 20,
+                    maxNativeZoom: 18,
+                    opacity: 0.5,
+                    attribution: 'Map data © OpenStreetMap contributors'
+                }
+            );
+
+            var osmOpenTopoMap = new L.TileLayer(
+                // 'http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+                'http://dev.opentopomap.org/{z}/{x}/{y}.png',
+                {
+                    minZoom: 3,
+                    maxZoom: 20,
+                    maxNativeZoom: 17,
+                    attribution: 'Kartendaten: &copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>-Mitwirkende, <a href="http://viewfinderpanoramas.org">SRTM</a> | Kartendarstellung: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+                }
+            );
+
+            var googleMaps = new L.TileLayer(
+                'http://mt.google.com/vt?&x={x}&y={y}&z={z}',
+                {
+                    attribution: "<a href=\'http://maps.google.com/\'>Google</a> Maps",
+                    subdomains: "1234",
+                    tileSize: 256,
+                    minZoom: 3,
+                    maxZoom: 20,
+                    maxNativeZoom: 20
+                }
+            );
+
+            var googleSatellite = new L.TileLayer(
+                'http://mt.google.com/vt?lyrs=s&x={x}&y={y}&z={z}',
+                {
+                    attribution:"<a href=\'http://maps.google.com/\'>Google</a> Maps Satellite",
+                    subdomains:"1234",
+                    tileSize:256,
+                    minZoom:3,
+                    maxZoom: 20,
+                    maxNativeZoom:20
+                }
+            );
+
+            var googleHybrid = new L.TileLayer(
+                'http://mt.google.com/vt?lyrs=y&x={x}&y={y}&z={z}',
+                {
+                    attribution:"<a href=\'http://maps.google.com/\'>Google</a> Maps Satellite",
+                    subdomains:"1234",
+                    tileSize:256,
+                    minZoom:3,
+                    maxZoom: 20,
+                    maxNativeZoom:20
+                }
+            );
+
+            var bingMaps = new L.QuadKeyTileLayer(
+                'http://ecn.t{s}.tiles.virtualearth.net/tiles/r{q}?g=864&mkt=en-gb&lbl=l1&stl=h&shading=hill&n=z',
+                {
+                    subdomains: "0123",
+                    minZoom: 3,
+                    maxZoom: 20,
+                    maxNativeZoom: 19,
+                    attribution: "<a href=\'http://maps.bing.com/\'>Bing</a> map data copyright Microsoft and its suppliers"
+                }
+            );
+
+            var bingAerial = new L.QuadKeyTileLayer(
+                'http://ecn.t{s}.tiles.virtualearth.net/tiles/a{q}?g=737&n=z',
+                {
+                    subdomains: "0123",
+                    minZoom: 3,
+                    maxZoom: 20,
+                    maxNativeZoom: 19,
+                    attribution: "<a href=\'http://maps.bing.com/\'>Bing</a> map data copyright Microsoft and its suppliers"
+                }
+            );
+
+            var hillshading = new L.TileLayer(
+                    'http://{s}.tiles.wmflabs.org/hillshading/{z}/{x}/{y}.png',
+                {
+                    attribution: "Hillshading by ??? from NASA SRTM data",
+                    minZoom: 3,
+                    maxNativeZoom: 16,
+                    overlay: true
+                }
+            );
+
+            var map = L.map('map', {
+                layers: [osmMapnik],
+                editInOSMControlOptions: {
+                    position: "bottomright",
+                    zoomThreshold: 16,
+                    widget: "attributionBox",
+                    editors: ["josm"]
+                },
+                contextmenu: true,
+                contextmenuItems: [
+                    {
+                        text: 'Show coordinates',
+                        callback: function (e) {
+                            alert([(0|e.latlng.lat*1000000)/1000000, ' ', (0|e.latlng.lng*1000000)/1000000, "\n\n", convertDDtoDM(e.latlng.lat, e.latlng.lng)].join(''));
+                        }
+                    }
+                ]
+            });
+
+            var baseMaps = {
+                "OpenStreetMap": osmMapnik,
+                "OpenTopoMap": osmOpenTopoMap,
+                "Google Maps": googleMaps,
+                "Google Maps Satellite": googleSatellite,
+                "Google Maps Hybrid": googleHybrid,
+                "Bing Maps": bingMaps,
+                "Bing Aerial View": bingAerial
+            };
+
+            var overlayMaps = {
+                "Hillshading": hillshading,
+                "OpenStreetMap (opacity=0.5)": osmMapnikOverlay
+            };
+
+            if (!map.restoreView()) {
+                map.setView([49, 9], 5); // Somewhere in Europe
+            }
+
+            new L.Hash(map);
+
+            new L.HistoryControl({
+                maxMovesToSave: 100
+            }).addTo(map);
+
+            L.control.layers(baseMaps, overlayMaps).addTo(map);
+            L.control.scale().addTo(map);
+
+            L.control.locate({
+                icon: 'fa fa-location-arrow',
+                showPopup: false
+            }).addTo(map);
+
+            new L.Control.Measure({
+                position: 'topleft',
+                measureUnit: 'km'
+            }).addTo(map);
+
+            var geocoder = new L.Control.Geocoder({
+                position: "topleft"
+            }).addTo(map);
+
+            geocoder.markGeocode = function(result) {
+                this._map.fitBounds(result.bbox);
+
+                var marker = new L.Marker(result.center, {
+                        contextmenu: true,
+                        contextmenuInheritItems: false,
+                        contextmenuItems: [
+                            {
+                                text: 'Remove marker',
+                                index: 0,
+                                callback: function (e) {
+                                    map.removeLayer(marker);
+                                }
+                            }
+                        ]
+                    })
+                    .bindPopup(result.html || result.name)
+                    .addTo(this._map)
+                    .openPopup();
+
+                this._geocodeMarker = marker;
+
+                return this;
+            }
+        </script>
+    </body>
+</html>
