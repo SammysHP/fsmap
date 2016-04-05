@@ -197,6 +197,8 @@
                 }
             );
 
+            L.Icon.Default.imagePath = 'images';
+
             var map = L.map('map', {
                 layers: [osmMapnik],
                 editInOSMControlOptions: {
@@ -211,6 +213,30 @@
                         text: 'Show coordinates',
                         callback: function (e) {
                             alert([(0|e.latlng.lat*1000000)/1000000, ' ', (0|e.latlng.lng*1000000)/1000000, "\n\n", convertDDtoDM(e.latlng.lat, e.latlng.lng)].join(''));
+                        }
+                    },
+                    {
+                        text: 'Add marker',
+                        callback: function (e) {
+                            var marker = new L.Marker(e.latlng, {
+                                contextmenu: true,
+                                contextmenuInheritItems: false,
+                                contextmenuItems: [
+                                    {
+                                        text: 'Remove marker',
+                                        callback: function (e) {
+                                            map.removeLayer(marker);
+                                        }
+                                    },
+                                    {
+                                        text: 'Show coordinates',
+                                        callback: function (x) {
+                                            // e is in closure of "add marker" callback
+                                            alert([(0|e.latlng.lat*1000000)/1000000, ' ', (0|e.latlng.lng*1000000)/1000000, "\n\n", convertDDtoDM(e.latlng.lat, e.latlng.lng)].join(''));
+                                        }
+                                    }
+                                ]
+                            }).addTo(map);
                         }
                     }
                 ],
