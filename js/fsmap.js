@@ -295,7 +295,7 @@ function createMarker(position, options = {}) {
             {
                 text: 'Share marker',
                 callback: function (e) {
-                    shareCoordinates(e.latlng);
+                    shareCoordinates(position);
                 }
             },
         ]
@@ -309,12 +309,11 @@ function createMarker(position, options = {}) {
  */
 function shareCoordinates(position) {
     let zoom = map.getZoom();
-    let precision = Math.max(0, Math.ceil(Math.log(zoom) / Math.LN2));
 
     let hash = '#' + [
         zoom,
-        position.lat.toFixed(precision),
-        position.lng.toFixed(precision),
+        position.lat.toFixed(6),
+        position.lng.toFixed(6),
         'm'
     ].join('/');
 
