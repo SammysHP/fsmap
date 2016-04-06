@@ -208,10 +208,51 @@ let map = L.map('map', {
                 createMarker(e.latlng).addTo(map);
             }
         },
+        {
+            separator: true
+        },
+        {
+            text: 'Open OSM tile',
+            callback: function (e) {
+                window.open(getOsmMapnikUrl(e.latlng, map.getZoom()), '_blank');
+            }
+        },
+        {
+            text: 'Mark OSM tile as dirty',
+            callback: function (e) {
+                $.ajax({
+                    url: getOsmMapnikUrl(e.latlng, map.getZoom()) + '/dirty',
+                    success: function (response) {
+                        alert(response);
+                    }
+                });
+            }
+        },
+        {
+            text: 'Show OSM tile status',
+            callback: function (e) {
+                $.ajax({
+                    url: getOsmMapnikUrl(e.latlng, map.getZoom()) + '/status',
+                    success: function (response) {
+                        alert(response);
+                    }
+                });
+            }
+        },
     ],
 
     fullscreenControl: true,
 });
+
+function getOsmMapnikUrl(coordinates, zoom) {
+    let lat = coordinates.lat;
+    let lon = coordinates.lng;
+
+    let x = Math.floor((lon+180)/360*Math.pow(2,zoom));
+    let y = Math.floor((1-Math.log(Math.tan(lat*Math.PI/180) + 1/Math.cos(lat*Math.PI/180))/Math.PI)/2 *Math.pow(2,zoom));
+
+    return 'http://a.tile.openstreetmap.org/' + zoom + '/' + x + '/' + y + '.png';
+}
 
 /*
  * Create universal marker with contextmenu.
