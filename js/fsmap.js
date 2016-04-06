@@ -177,7 +177,7 @@ L.Icon.Default.imagePath = 'images';
  * - add contextmenu
  * - add fullscreen control
  */
-var map = L.map('map', {
+let map = L.map('map', {
     layers: [osmMapnik],
     maxBounds: [[90,-180], [-90,180]],
 
@@ -194,6 +194,12 @@ var map = L.map('map', {
             text: 'Show coordinates',
             callback: function (e) {
                 showCoordinates(e.latlng)
+            }
+        },
+        {
+            text: 'Share this location',
+            callback: function (e) {
+                shareCoordinates(e.latlng);
             }
         },
         {
@@ -248,13 +254,35 @@ function createMarker(position, options = {}) {
             {
                 text: 'Share marker',
                 callback: function (e) {
-                    // TODO
+                    shareCoordinates(e.latlng);
                 }
             },
         ]
     });
 
     return marker;
+}
+
+/*
+ * Share a location.
+ */
+function shareCoordinates(position) {
+    let zoom = map.getZoom();
+    let precision = Math.max(0, Math.ceil(Math.log(zoom) / Math.LN2));
+
+    let hash = '#' + [
+        zoom,
+        position.lat.toFixed(precision),
+        position.lng.toFixed(precision),
+        'm'
+    ].join('/');
+
+    let url = [
+        window.location.href.split('#')[0],
+        hash
+    ].join('');
+
+    alert("Warning: Experimental service, URL might change without warning!\n\n" + url);
 }
 
 /*
@@ -265,15 +293,28 @@ function showCoordinates(position) {
 }
 
 /*
- * Restore last position or fallback to world
+ * Restore last position or fallback to world.
  */
 if (!map.restoreView()) {
     map.fitBounds([[75,-160], [-45,160]]); // almost full world
 }
 
 /*
- * Start auto update of URL
+ * Start auto update of URL and create marker.
+ *
+ * Format: #zoom/lat/lon[/m]
+ *
+ * TODO: Make hash configurable (e.g. objects for each part that handle parsing
+ * and formatting of the hash; needs rewrite of hash plugin)
+ *
+ * TODO: Does only work if URL opened, not when hash changed
  */
+let hash = location.hash;
+let loc = L.Hash.parseHash(hash)
+if (loc && hash.indexOf('/m', hash.length - 2) !== -1) {
+    createMarker(loc.center).addTo(map);
+}
+
 new L.Hash(map);
 
 /*

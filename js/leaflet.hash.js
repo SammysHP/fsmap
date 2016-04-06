@@ -18,7 +18,7 @@
 			hash = hash.substr(1);
 		}
 		var args = hash.split("/");
-		if (args.length == 3) {
+		if (args.length >= 3) {
 			var zoom = parseInt(args[0], 10),
 			lat = parseFloat(args[1]),
 			lon = parseFloat(args[2]);
