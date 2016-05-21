@@ -401,7 +401,6 @@ L.control.locate({
  */
 new L.Control.Measure({
     position: 'topleft',
-    measureUnit: 'km'
 }).addTo(map);
 
 /*

@@ -1,7 +1,7 @@
 L.Control.Measure = L.Control.extend({
 	options: {
 		position: 'topleft',
-        measureUnit: 'm'
+		isImperial: false,
 	},
 
 	onAdd: function (map) {
@@ -210,47 +210,33 @@ L.Control.Measure = L.Control.extend({
 		this._tooltip.setLatLng(position);
 	},
 
+    _convertDistance: function (distance) {
+        let dist = distance;
+        let unit = "m";
+
+        if (this.options.isImperial) {
+            dist = distance * 3.2808;
+            unit = "ft";
+
+            if (dist >= 500) {
+                dist = distance * 0.00062137;
+                unit = "mi";
+            }
+        } else if (dist >= 1000) {
+            dist = distance / 1000;
+            unit = "km";
+        }
+
+        return {value: Math.round(dist * 100) / 100, unit: unit};
+    },
+
 	_updateTooltipDistance: function(total, difference) {
-		var totalRound;
-		var differenceRound;
-		var measureUnit = this.options.measureUnit;
+		var totalRound = this._convertDistance(total);
+		var differenceRound = this._convertDistance(difference);
 
-		//extensible option for multiple units
-		switch(measureUnit){
-			case "nm":  
-				total *= 0.00053996;
-				difference	*= 0.00053996;
-				break;
-			case "ft":
-				total *= 3.2808;
-				difference	*= 3.2808;
-				break;
-			case "yd":
-				total *=  1.0936;
-				difference	*=  1.0936;
-				break;
-			case "mi":
-				total *=  0.00062137;
-				difference	*=  0.00062137;
-				break;
-			case "km":
-				total /=  1000;
-				difference	/=  1000;
-				break;
-			case "m":
-				total /=1;
-				difference != 1;
-				break;
-			default:
-				console.error("Unit: "+measureUnit+" is not supportet by Leaflet.Measure");
-		}
-
-		totalRound = Math.round(total * 100) / 100;
-		differenceRound = Math.round(difference * 100) / 100;
-
-		var text = '<div class="leaflet-measure-tooltip-total">' + totalRound + ' ' +  measureUnit + '</div>';
-		if (differenceRound > 0 && totalRound != differenceRound) {
-			text += '<div class="leaflet-measure-tooltip-difference">(+' + differenceRound + ' ' +  measureUnit + ')</div>';
+		var text = '<div class="leaflet-measure-tooltip-total">' + totalRound.value + ' ' +  totalRound.unit + '</div>';
+		if (differenceRound.value > 0 && totalRound.value != differenceRound.value) {
+			text += '<div class="leaflet-measure-tooltip-difference">(+' + differenceRound.value + ' ' +  differenceRound.unit + ')</div>';
 		}
 
 		this._tooltip._icon.innerHTML = text;
