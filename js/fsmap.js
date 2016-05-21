@@ -52,7 +52,7 @@ var osmMapnik = new L.TileLayer(
     {
         minZoom: 3,
         maxZoom: 20,
-        maxNativeZoom: 18,
+        maxNativeZoom: 19,
         attribution: 'Map data © OpenStreetMap contributors'
     }
 );
@@ -63,7 +63,7 @@ var osmMapnikOverlay = new L.TileLayer(
     {
         minZoom: 3,
         maxZoom: 20,
-        maxNativeZoom: 18,
+        maxNativeZoom: 19,
         opacity: 0.5,
         attribution: 'Map data © OpenStreetMap contributors'
     }
