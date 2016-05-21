@@ -71,7 +71,7 @@ var osmMapnikOverlay = new L.TileLayer(
 
 var osmOpenTopoMap = new L.TileLayer(
     // 'http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
-    'http://dev.opentopomap.org/{z}/{x}/{y}.png',
+    'http://opentopomap.org/{z}/{x}/{y}.png',
     {
         minZoom: 3,
         maxZoom: 20,
@@ -159,6 +159,13 @@ var baseLayers = {
 };
 
 var overlayLayers = {
+    "OpenStreetMap": osmMapnik,
+    "OpenTopoMap": osmOpenTopoMap,
+    "Google Maps": googleMaps,
+    "Google Maps Satellite": googleSatellite,
+    "Google Maps Hybrid": googleHybrid,
+    "Bing Maps": bingMaps,
+    "Bing Aerial View": bingAerial,
     "Hillshading": hillshading,
     "OpenStreetMap (opacity=0.5)": osmMapnikOverlay
 };
@@ -367,7 +374,14 @@ new L.HistoryControl({
 /*
  * Layer selector with base and overlay layers.
  */
-L.control.layers(baseLayers, overlayLayers).addTo(map);
+L.control.layers([], overlayLayers).addTo(map);
+
+$('.leaflet-control-layers-overlays span').each(function (i, e) {
+    $(e).prepend('<input class="opacity-selector" type="range" min="0" max="1" step="0.1" value="0.5" onchange="updateOpacity(osmOpenTopoMap, this.value)">');
+});
+function updateOpacity(layer, value) {
+    layer.setOpacity(value);
+}
 
 /*
  * A nice scale in the bottom left corner.
