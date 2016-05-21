@@ -28,6 +28,19 @@ L.TileLayer.QuadKeyTileLayer = L.TileLayer.extend({
 });
 
 /*
+ * A layer without content. When enabled, it adds a border to all visible tiles.
+ */
+var TileBorderLayer = L.Class.extend({
+    onAdd: function (map) {
+        $(map.getContainer()).addClass('show-tile-borders');
+    },
+
+    onRemove: function (map) {
+        $(map.getContainer()).removeClass('show-tile-borders');
+    },
+});
+
+/*
  * Convert decimal degree to decimal minutes.
  */
 function convertDDtoDM(lat, lon) {
@@ -155,12 +168,13 @@ var baseLayers = {
     "Google Maps Satellite": googleSatellite,
     "Google Maps Hybrid": googleHybrid,
     "Bing Maps": bingMaps,
-    "Bing Aerial View": bingAerial
+    "Bing Aerial View": bingAerial,
 };
 
 var overlayLayers = {
     "Hillshading": hillshading,
-    "OpenStreetMap (opacity=0.5)": osmMapnikOverlay
+    "OpenStreetMap (opacity=0.5)": osmMapnikOverlay,
+    "Tile Borders": new TileBorderLayer(),
 };
 
 /*
