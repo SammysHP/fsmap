@@ -83,8 +83,7 @@ var osmMapnikOverlay = new L.TileLayer(
 );
 
 var osmOpenTopoMap = new L.TileLayer(
-    // 'http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
-    'http://dev.opentopomap.org/{z}/{x}/{y}.png',
+    'http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
     {
         minZoom: 3,
         maxZoom: 20,
