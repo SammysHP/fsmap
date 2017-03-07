@@ -61,7 +61,7 @@ function convertDDtoDM(lat, lon) {
  * Layer definitions.
  */
 var osmMapnik = new L.TileLayer(
-    'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     {
         minZoom: 3,
         maxZoom: 20,
@@ -72,7 +72,7 @@ var osmMapnik = new L.TileLayer(
 
 // Just a quick way to add an OSM overlay. Idea for the future: All layers as overlays with independent opacity sliders.
 var osmMapnikOverlay = new L.TileLayer(
-    'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     {
         minZoom: 3,
         maxZoom: 20,
@@ -83,7 +83,7 @@ var osmMapnikOverlay = new L.TileLayer(
 );
 
 var osmOpenTopoMap = new L.TileLayer(
-    'http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+    'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
     {
         minZoom: 3,
         maxZoom: 20,
@@ -93,7 +93,7 @@ var osmOpenTopoMap = new L.TileLayer(
 );
 
 var googleMaps = new L.TileLayer(
-    'http://mt.google.com/vt?&x={x}&y={y}&z={z}',
+    'https://mt.google.com/vt?&x={x}&y={y}&z={z}',
     {
         attribution: "<a href=\'http://maps.google.com/\'>Google</a> Maps",
         subdomains: "1234",
@@ -105,7 +105,7 @@ var googleMaps = new L.TileLayer(
 );
 
 var googleSatellite = new L.TileLayer(
-    'http://mt.google.com/vt?lyrs=s&x={x}&y={y}&z={z}',
+    'https://mt.google.com/vt?lyrs=s&x={x}&y={y}&z={z}',
     {
         attribution:"<a href=\'http://maps.google.com/\'>Google</a> Maps Satellite",
         subdomains:"1234",
@@ -117,7 +117,7 @@ var googleSatellite = new L.TileLayer(
 );
 
 var googleHybrid = new L.TileLayer(
-    'http://mt.google.com/vt?lyrs=y&x={x}&y={y}&z={z}',
+    'https://mt.google.com/vt?lyrs=y&x={x}&y={y}&z={z}',
     {
         attribution:"<a href=\'http://maps.google.com/\'>Google</a> Maps Satellite",
         subdomains:"1234",
@@ -129,7 +129,7 @@ var googleHybrid = new L.TileLayer(
 );
 
 var bingMaps = new L.TileLayer.QuadKeyTileLayer(
-    'http://ecn.t{s}.tiles.virtualearth.net/tiles/r{q}?g=864&mkt=en-gb&lbl=l1&stl=h&shading=hill&n=z',
+    'https://ecn.t{s}.tiles.virtualearth.net/tiles/r{q}?g=864&mkt=en-gb&lbl=l1&stl=h&shading=hill&n=z',
     {
         subdomains: "0123",
         minZoom: 3,
@@ -140,7 +140,7 @@ var bingMaps = new L.TileLayer.QuadKeyTileLayer(
 );
 
 var bingAerial = new L.TileLayer.QuadKeyTileLayer(
-    'http://ecn.t{s}.tiles.virtualearth.net/tiles/a{q}?g=737&n=z',
+    'https://ecn.t{s}.tiles.virtualearth.net/tiles/a{q}?g=737&n=z',
     {
         subdomains: "0123",
         minZoom: 3,
@@ -151,7 +151,7 @@ var bingAerial = new L.TileLayer.QuadKeyTileLayer(
 );
 
 var hillshading = new L.TileLayer(
-        'http://{s}.tiles.wmflabs.org/hillshading/{z}/{x}/{y}.png',
+    'http://{s}.tiles.wmflabs.org/hillshading/{z}/{x}/{y}.png',
     {
         attribution: "Hillshading by ??? from NASA SRTM data",
         minZoom: 3,
@@ -264,7 +264,7 @@ function getOsmMapnikUrl(coordinates, zoom) {
     let x = Math.floor((lon+180)/360*Math.pow(2,zoom));
     let y = Math.floor((1-Math.log(Math.tan(lat*Math.PI/180) + 1/Math.cos(lat*Math.PI/180))/Math.PI)/2 *Math.pow(2,zoom));
 
-    return 'http://a.tile.openstreetmap.org/' + zoom + '/' + x + '/' + y + '.png';
+    return 'https://a.tile.openstreetmap.org/' + zoom + '/' + x + '/' + y + '.png';
 }
 
 /*
