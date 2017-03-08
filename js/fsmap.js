@@ -151,7 +151,7 @@ var bingAerial = new L.TileLayer.QuadKeyTileLayer(
 );
 
 var hillshading = new L.TileLayer(
-    'http://{s}.tiles.wmflabs.org/hillshading/{z}/{x}/{y}.png',
+    'https://tiles.wmflabs.org/hillshading/{z}/{x}/{y}.png',
     {
         attribution: "Hillshading by ??? from NASA SRTM data",
         minZoom: 3,
