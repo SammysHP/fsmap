@@ -153,7 +153,7 @@ var bingAerial = new L.TileLayer.QuadKeyTileLayer(
 var hillshading = new L.TileLayer(
     'https://tiles.wmflabs.org/hillshading/{z}/{x}/{y}.png',
     {
-        attribution: "Hillshading by ??? from NASA SRTM data",
+        attribution: "Hillshading by <a href=\'http://hikebikemap.org/\'>Colin Marquardt / hikebikemap.de</a> from NASA SRTM data",
         minZoom: 3,
         maxNativeZoom: 16,
         overlay: true
