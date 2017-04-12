@@ -70,7 +70,7 @@ var osmMapnik = new L.TileLayer(
     }
 );
 
-// Just a quick way to add an OSM overlay. Idea for the future: All layers as overlays with independent opacity sliders.
+// Just a quick way to add an OSM overlay. TODO: Idea for the future: All layers as overlays with independent opacity sliders.
 var osmMapnikOverlay = new L.TileLayer(
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     {
@@ -172,7 +172,7 @@ var baseLayers = {
 
 var overlayLayers = {
     "Hillshading": hillshading,
-    "OpenStreetMap (opacity=0.5)": osmMapnikOverlay,
+    "OpenStreetMap <input id='slider1' type='range' min='0' max='1' step='0.1' value='0.5' style='width: 4em;'/>": osmMapnikOverlay,
     "Tile Borders": new TileBorderLayer(),
 };
 
@@ -423,3 +423,13 @@ geocoder.markGeocode = function(result) {
 
     return this;
 }
+
+
+
+
+$(function () {
+    $('#slider1').on('change', function () {
+        osmMapnikOverlay.setOpacity($('#slider1').val());
+        // map.addLayer(osmMapnikOverlay);
+    });
+});
