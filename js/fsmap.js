@@ -185,14 +185,14 @@ L.Icon.Default.imagePath = 'images';
  * Initialization of map.
  *
  * - select shown layers
- * - limit bounds (TODO: do some modulo like stuff)
  * - configure edit link
  * - add contextmenu
  * - add fullscreen control
  */
 let map = L.map('map', {
     layers: [osmMapnik],
-    maxBounds: [[90,-180], [-90,180]],
+    maxBounds: [[90,-500], [-90,500]], // to prevent getting lost in north/south
+    worldCopyJump: true,
 
     editInOSMControlOptions: {
         position: "bottomright",
