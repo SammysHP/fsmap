@@ -404,22 +404,19 @@ new L.Control.Measure({
 
 /*
  * Initialize and configure geocoder.
- *
- * It uses an IDK geocoder and creates a node with the result in the popup.
  */
 var geocoder = new L.Control.Geocoder({
-    position: "topleft"
-}).addTo(map);
+        position: 'topleft',
+        defaultMarkGeocode: false,
+    })
+    .on('markgeocode', function(e) {
+        let result = e.geocode || result;
 
-geocoder.markGeocode = function(result) {
-    this._map.fitBounds(result.bbox);
+        map.fitBounds(result.bbox);
 
-    let marker = createMarker(result.center, { title: result.name })
-        .bindPopup(result.html || result.name)
-        .addTo(this._map)
-        .openPopup();
-
-    this._geocodeMarker = marker;
-
-    return this;
-}
+        let marker = createMarker(result.center, { title: result.name })
+            .bindPopup(result.html || result.name)
+            .addTo(this._map)
+            .openPopup();
+    })
+    .addTo(map);
