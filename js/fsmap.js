@@ -380,7 +380,7 @@ new L.HistoryControl({
 /*
  * Layer selector with base and overlay layers.
  */
-L.control.layers(baseLayers, overlayLayers).addTo(map);
+let layercontrol = L.control.layers(baseLayers, overlayLayers).addTo(map);
 
 /*
  * A nice scale in the bottom left corner.
@@ -405,7 +405,7 @@ new L.Control.Measure({
 /*
  * Initialize and configure geocoder.
  */
-var geocoder = new L.Control.Geocoder({
+new L.Control.Geocoder({
         position: 'topleft',
         defaultMarkGeocode: false,
     })
@@ -420,3 +420,59 @@ var geocoder = new L.Control.Geocoder({
             .openPopup();
     })
     .addTo(map);
+
+/*
+ * Load GPX files from browser.
+ */
+L.Control.FileLayerLoad.LABEL = '';
+
+let fileLayerColors = [
+    "#f44336",
+    "#9c27b0",
+    "#2196f3",
+    "#4caf50",
+    "#ff9800",
+    "#795548",
+    "#607d8b",
+];
+
+let fileLayerControl = L.Control.fileLayerLoad({
+    layerOptions: {
+        style: function (feature) {
+            return {
+                color: fileLayerColors[0],
+                opacity: 0.9,
+                fillOpacity: 0.5,
+            }
+        },
+
+        pointToLayer: function (feature, latlng) {
+            return L.circleMarker(latlng);
+        },
+
+        onEachFeature: function (feature, layer) {
+            let popupContent = [];
+
+            if (feature.properties.name) {
+                popupContent.push("<b>" + feature.properties.name + "</b>");
+            }
+
+            if (feature.properties.desc) {
+                popupContent.push(feature.properties.desc);
+            }
+
+            if (feature.properties.time) {
+                popupContent.push(feature.properties.time);
+            }
+
+            layer.bindPopup(popupContent.join("<br>"));
+        },
+    },
+}).addTo(map);
+
+fileLayerControl.loader.on('data:loaded', function (e) {
+    layercontrol.addOverlay(e.layer, '<span style="color: ' + fileLayerColors[0] + '">' + e.filename + '</span>');
+
+    // rotate to next color
+    fileLayerColors.push(fileLayerColors.shift());
+});

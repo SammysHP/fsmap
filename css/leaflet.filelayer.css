@@ -1,0 +1,9 @@
+.leaflet-control-filelayer a {
+    background: #fff url(../images/gpx.svg) no-repeat;
+    background-size: 22px;
+    background-position: center;
+
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-bottom: none;
+}
