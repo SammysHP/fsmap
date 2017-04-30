@@ -233,9 +233,11 @@ let map = L.map('map', {
         {
             text: 'Mark OSM tile as dirty',
             callback: function (e) {
+                tileUrl = getOsmMapnikUrl(e.latlng, map.getZoom())
                 $.ajax({
-                    url: getOsmMapnikUrl(e.latlng, map.getZoom()) + '/dirty',
+                    url: tileUrl + '/dirty',
                     success: function (response) {
+                        $('.leaflet-tile[src*="' + tileUrl.substr(8) + '"]').fadeTo("fast", .2);
                         alert(response);
                     }
                 });
@@ -264,7 +266,7 @@ function getOsmMapnikUrl(coordinates, zoom) {
     let x = Math.floor((lon+180)/360*Math.pow(2,zoom));
     let y = Math.floor((1-Math.log(Math.tan(lat*Math.PI/180) + 1/Math.cos(lat*Math.PI/180))/Math.PI)/2 *Math.pow(2,zoom));
 
-    return 'https://a.tile.openstreetmap.org/' + zoom + '/' + x + '/' + y + '.png';
+    return 'https://tile.openstreetmap.org/' + zoom + '/' + x + '/' + y + '.png';
 }
 
 /*
