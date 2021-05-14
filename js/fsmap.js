@@ -470,6 +470,8 @@ let fileLayerControl = L.Control.fileLayerLoad({
             layer.bindPopup(popupContent.join("<br>"));
         },
     },
+
+    fileSizeLimit: 4096,
 }).addTo(map);
 
 fileLayerControl.loader.on('data:loaded', function (e) {
