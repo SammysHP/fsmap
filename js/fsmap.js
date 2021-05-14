@@ -3,7 +3,6 @@
  */
 L.TileLayer.QuadKeyTileLayer = L.TileLayer.extend({
     getTileUrl: function (tilePoint) {
-        this._adjustTilePoint(tilePoint);
         return L.Util.template(this._url, {
             s: this._getSubdomain(tilePoint),
             q: this._quadKey(tilePoint.x, tilePoint.y, this._getZoomForUrl())
