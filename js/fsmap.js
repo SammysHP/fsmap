@@ -30,7 +30,7 @@ L.TileLayer.QuadKeyTileLayer = L.TileLayer.extend({
 /*
  * A layer without content. When enabled, it adds a border to all visible tiles.
  */
-var TileBorderLayer = L.Class.extend({
+var TileBorderLayer = L.Layer.extend({
     onAdd: function (map) {
         $(map.getContainer()).addClass('show-tile-borders');
     },
@@ -179,7 +179,7 @@ var overlayLayers = {
 /*
  * Set path to default marker images
  */
-L.Icon.Default.imagePath = 'images';
+L.Icon.Default.imagePath = 'images/';
 
 /*
  * Initialization of map.
