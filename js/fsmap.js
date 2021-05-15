@@ -154,6 +154,7 @@ var hillshading = new L.TileLayer(
     {
         attribution: "Hillshading by <a href=\'http://hikebikemap.org/\'>Colin Marquardt / hikebikemap.de</a> from NASA SRTM data",
         minZoom: 3,
+        maxZoom: 20,
         maxNativeZoom: 16,
         overlay: true
     }
