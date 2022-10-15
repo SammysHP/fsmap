@@ -149,17 +149,6 @@ var bingAerial = new L.TileLayer.QuadKeyTileLayer(
     }
 );
 
-var hillshading = new L.TileLayer(
-    'https://tiles.wmflabs.org/hillshading/{z}/{x}/{y}.png',
-    {
-        attribution: "Hillshading by <a href=\'http://hikebikemap.org/\'>Colin Marquardt / hikebikemap.de</a> from NASA SRTM data",
-        minZoom: 3,
-        maxZoom: 20,
-        maxNativeZoom: 16,
-        overlay: true
-    }
-);
-
 var baseLayers = {
     "OpenStreetMap": osmMapnik,
     "OpenTopoMap": osmOpenTopoMap,
@@ -171,7 +160,6 @@ var baseLayers = {
 };
 
 var overlayLayers = {
-    "Hillshading": hillshading,
     "OpenStreetMap (opacity=0.5)": osmMapnikOverlay,
     "Tile Borders": new TileBorderLayer(),
 };
