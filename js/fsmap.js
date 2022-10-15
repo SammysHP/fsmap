@@ -259,6 +259,11 @@ let map = L.map('map', {
     fullscreenControl: true,
 });
 
+/*
+ * Remove Ukrainian flag from attribution to keep this politically neutral.
+ */
+map.attributionControl.setPrefix('<a href="https://leafletjs.com" title="A JavaScript library for interactive maps">Leaflet</a>');
+
 function getOsmMapnikUrl(coordinates, zoom) {
     let lat = coordinates.lat;
     let lon = coordinates.lng;
