@@ -297,13 +297,13 @@ function createMarker(position, options = {}) {
             {
                 text: 'Show coordinates',
                 callback: function (e) {
-                    showCoordinates(position)
+                    showCoordinates(marker.getLatLng())
                 }
             },
             {
                 text: 'Share marker',
                 callback: function (e) {
-                    shareCoordinates(position);
+                    shareCoordinates(marker.getLatLng());
                 }
             },
         ]
