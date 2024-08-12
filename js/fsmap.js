@@ -464,7 +464,7 @@ let fileLayerControl = L.Control.fileLayerLoad({
         },
     },
 
-    fileSizeLimit: 4096,
+    fileSizeLimit: 51200,
 }).addTo(map);
 
 fileLayerControl.loader.on('data:loaded', function (e) {
